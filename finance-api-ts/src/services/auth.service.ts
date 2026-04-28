@@ -31,7 +31,7 @@ export async function signUpUser(
     // Return user details
     return {
         id: user._id,
-        name: user.email,
+        name: user.name,
         email: user.email
     };
 }
