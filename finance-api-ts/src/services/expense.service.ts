@@ -7,14 +7,14 @@ export async function createExpense(
     title: string,
     amount: number,
     category: string,
-    userId: Types.ObjectId
+    userId: string
 ) {
     // Create expense
     const expense = await Expense.create({
         title,
         amount,
         category,
-        userId
+        userId: new Types.ObjectId(userId)
     })
 
     return {
@@ -27,7 +27,7 @@ export async function createExpense(
 }
 
 // Get all user expenses service
-export async function getExpenses(userId: Types.ObjectId) {
+export async function getExpenses(userId: string) {
     // Get expenses
     const expenses = await Expense.find({userId}).sort({createdAt: -1}).lean();
 
