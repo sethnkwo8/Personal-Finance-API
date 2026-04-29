@@ -5,6 +5,8 @@ interface IExpense {
     amount: number;
     category: string;
     userId: Types.ObjectId;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export type ExpenseDocument = HydratedDocument<IExpense>;
