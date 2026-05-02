@@ -27,9 +27,16 @@ export async function get(req: AuthRequest, res: Response, next: NextFunction) {
             return res.status(401).json({message: "Unauthorized"})
         }
 
-        const expenses = await getExpenses(req.user.userId)
+        const {page = "1", limit = "10", category} = req.query;
 
-        res.status(200).json(expenses)
+        const results = await getExpenses(
+            req.user.userId,
+            Number(page),
+            Number(limit),
+            category as string
+        )
+
+        res.status(200).json(results)
     } catch(err) {
         next(err)
     }

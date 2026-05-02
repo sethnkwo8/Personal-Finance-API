@@ -27,7 +27,12 @@ export async function createExpense(
 }
 
 // Get all user expenses service
-export async function getExpenses(userId: string) {
+export async function getExpenses(
+    userId: string,
+    page: number,
+    limit: number,
+    category?: string
+) {
     if (!Types.ObjectId.isValid(userId)) {
         const err = new Error("Invalid user ID");
         (err as any).statusCode = 400;
@@ -36,17 +41,42 @@ export async function getExpenses(userId: string) {
 
     const userObjectId = new Types.ObjectId(userId)
 
+    // Initialize query with user ID
+    const query: any = {userId: userObjectId}
+
+    // Filtering
+    if (category) {
+        query.category = category
+    }
+
+    // Pages skip
+    const skip = (page - 1) * limit;
+
     // Get expenses
-    const expenses = await Expense.find({userId: userObjectId}).sort({createdAt: -1}).lean();
+    const [expenses, total] = await Promise.all([
+        Expense.find(query)
+            .sort({createdAt: -1})
+            .skip(skip)
+            .limit(limit)
+            .lean(), 
+            Expense.countDocuments(query)]);
 
     // Return expenses
-    return expenses.map(e => ({
-        id: e._id.toString(),
-        title: e.title,
-        amount: e.amount,
-        category: e.category,
-        createdAt: e.createdAt
-    }))
+    return {
+        data: expenses.map(e => ({
+            id: e._id.toString(),
+            title: e.title,
+            amount: e.amount,
+            category: e.category,
+            createdAt: e.createdAt
+        })),
+        pagination: {
+            total,
+            page,
+            limit,
+            pages: Math.ceil(total / limit)
+        }
+    }
 }
 
 // Delete user expense
