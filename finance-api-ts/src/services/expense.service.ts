@@ -32,7 +32,13 @@ export async function getExpenses(
     userId: string,
     page: number,
     limit: number,
-    category?: string
+    filters: {
+        category?: string;
+        minAmount?: number;
+        maxAmount?: number;
+        startDate?: string;
+        endDate?: string;
+    }
 ) {
     if (!Types.ObjectId.isValid(userId)) {
         throw new AppError("Invalid user ID", 400);
@@ -44,8 +50,20 @@ export async function getExpenses(
     const query: any = {userId: userObjectId}
 
     // Filtering
-    if (category) {
-        query.category = category
+    if (filters.category) {
+        query.category = filters.category
+    }
+
+    if (filters.minAmount || filters.maxAmount) {
+        query.amount = {}
+        if (filters.minAmount) query.amount.$gte = filters.minAmount;
+        if (filters.maxAmount) query.amount.$lte = filters.maxAmount;
+    }
+
+    if (filters.startDate || filters.endDate) {
+        query.createdAt = {};
+        if (filters.startDate) query.createdAt.$gte = new Date(filters.startDate);
+        if (filters.endDate) query.createdAt.$lte = new Date(filters.endDate);
     }
 
     // Pages skip

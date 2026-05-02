@@ -28,13 +28,27 @@ export async function get(req: AuthRequest, res: Response, next: NextFunction) {
             throw new AppError("Unauthorized", 401)
         }
 
-        const {page = "1", limit = "10", category} = req.query;
+        const {
+            page = "1", 
+            limit = "10", 
+            category,
+            minAmount,
+            maxAmount,
+            startDate,
+            endDate
+        } = req.query;
 
         const results = await getExpenses(
             req.user.userId,
             Number(page),
             Number(limit),
-            category as string
+            {
+                category: category as string,
+                minAmount: minAmount ? Number(minAmount) : undefined,
+                maxAmount: maxAmount ? Number(maxAmount) : undefined,
+                startDate: startDate as string,
+                endDate: endDate as string
+            }
         )
 
         res.status(200).json(results)
