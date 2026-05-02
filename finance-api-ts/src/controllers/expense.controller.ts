@@ -2,6 +2,7 @@
 import { AuthRequest } from "../types/express.js";
 import { Response, NextFunction } from "express";
 import { createExpense, getExpenses, deleteExpense } from "../services/expense.service.js";
+import { AppError } from "../utils/AppError.js";
 
 // Create expense controller
 export async function create(req: AuthRequest, res: Response, next: NextFunction) {
@@ -9,7 +10,7 @@ export async function create(req: AuthRequest, res: Response, next: NextFunction
 
     try{
         if (!req.user) {
-            return res.status(401).json({message: "Unauthorized"})
+            throw new AppError("Unauthorized", 401)
         }
 
         const expense = await createExpense(title, amount, category, req.user.userId)
@@ -24,7 +25,7 @@ export async function create(req: AuthRequest, res: Response, next: NextFunction
 export async function get(req: AuthRequest, res: Response, next: NextFunction) {
     try {
         if (!req.user) {
-            return res.status(401).json({message: "Unauthorized"})
+            throw new AppError("Unauthorized", 401)
         }
 
         const {page = "1", limit = "10", category} = req.query;
@@ -48,11 +49,11 @@ export async function remove(req: AuthRequest, res: Response, next: NextFunction
 
     try{
         if (typeof id !== "string") {
-            return res.status(400).json({message: "Invalid ID format"})
+            throw new AppError("Invalid ID format", 400)
         }
 
         if (!req.user) {
-            return res.status(401).json("Unauthorized")
+            throw new AppError("Unauthorized", 401)
         }
 
         const result = await deleteExpense(id, req.user.userId)

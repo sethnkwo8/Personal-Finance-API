@@ -2,6 +2,7 @@
 import { User } from "../models/user.model.js";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import { AppError } from "../utils/AppError.js";
 
 // User signup service
 export async function signUpUser(
@@ -13,9 +14,7 @@ export async function signUpUser(
     const existingUser = await User.findOne({email})
 
     if (existingUser) {
-        const err = new Error("User already exists");
-        (err as any).statusCode = 400;
-        throw err
+        throw new AppError("User already exists", 400)
     }
 
     // Hash password
@@ -44,17 +43,13 @@ export async function loginUser(
     const user = await User.findOne({email})
 
     if (!user) {
-        const err = new Error("User not found");
-        (err as any).statusCode = 404;
-        throw err
+        throw new AppError("User not found", 404)
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-        const err = new Error("Incorrect password");
-        (err as any).statusCode = 401;
-        throw err
+        throw new AppError("Incorrect password", 401)
     }
 
     const token = jwt.sign(

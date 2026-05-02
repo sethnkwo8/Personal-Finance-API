@@ -1,6 +1,7 @@
 // Expense services
 import { Expense } from "../models/expense.model.js";
 import { Types } from "mongoose";
+import { AppError } from "../utils/AppError.js";
 
 // Create expense service
 export async function createExpense(
@@ -34,9 +35,7 @@ export async function getExpenses(
     category?: string
 ) {
     if (!Types.ObjectId.isValid(userId)) {
-        const err = new Error("Invalid user ID");
-        (err as any).statusCode = 400;
-        throw err;
+        throw new AppError("Invalid user ID", 400);
     }
 
     const userObjectId = new Types.ObjectId(userId)
@@ -83,9 +82,7 @@ export async function getExpenses(
 export async function deleteExpense(id: string, userId: string) {
     // Check if id is valid ObjectId
     if (!Types.ObjectId.isValid(id) || !Types.ObjectId.isValid(userId)) {
-        const err = new Error("Invalid ID format");
-        (err as any).statusCode = 400;
-        throw err
+        throw new AppError("Invalid user ID", 400);
     }
 
     // Convert ids to ObjectIds
@@ -96,9 +93,7 @@ export async function deleteExpense(id: string, userId: string) {
     const result = await Expense.findOneAndDelete({_id: expenseId, userId: userObjectId})
 
     if (!result) {
-        const err = new Error("Expense not found or unauthorized");
-        (err as any).statusCode = 404;
-        throw err
+        throw new AppError("Expense not found or unauthorized", 404);
     }
 
     return {
