@@ -52,11 +52,43 @@ export async function loginUser(
         throw new AppError("Incorrect password", 401)
     }
 
-    const token = jwt.sign(
+    const accessToken = jwt.sign(
         {userId: user._id},
-        process.env.JWT_SECRET as string,
-        {expiresIn: "1h"}
+        process.env.JWT_SECRET!,
+        {expiresIn: "15m"}
     )
 
-    return token
+    const refreshToken = jwt.sign(
+        {userId: user._id},
+        process.env.JWT_REFRESH_SECRET!,
+        {expiresIn: "7d"}
+    )
+
+    return {
+        accessToken,
+        refreshToken
+    }
+}
+
+// Refresh access token function
+export function refreshAccessTokenService(refreshToken: string) {
+    if (!refreshToken) {
+        throw new AppError("Unauthorized", 401)
+    }
+
+    try {
+        const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!) as {userId: string}
+
+        const {userId} = decoded
+
+        const accessToken = jwt.sign(
+            {userId},
+            process.env.JWT_SECRET!,
+            {expiresIn: "15m"}
+        )
+
+        return {accessToken}
+    } catch (err) {
+        throw new AppError("Invalid or expired refresh token", 403)
+    }
 }
