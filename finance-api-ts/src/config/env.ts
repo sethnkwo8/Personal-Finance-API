@@ -19,6 +19,7 @@ if (!parsed.success) {
     process.exit(1)
 }
 
+// Env used everywhere
 export const env = {
     port: Number(parsed.data.PORT),
     mongoUri: parsed.data.MONGO_URI,
