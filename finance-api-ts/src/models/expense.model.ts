@@ -33,4 +33,9 @@ const expenseSchema = new Schema<ExpenseDocument> ({
     timestamps: true
 }) 
 
+expenseSchema.index({userId: 1})
+expenseSchema.index({userId: 1, createdAt: -1})
+expenseSchema.index({userId: 1, category: 1})
+expenseSchema.index({userId: 1, amount: 1})
+
 export const Expense =  mongoose.model<ExpenseDocument>("Expense", expenseSchema)
