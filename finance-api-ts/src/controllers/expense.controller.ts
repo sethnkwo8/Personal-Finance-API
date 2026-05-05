@@ -3,6 +3,7 @@ import { AuthRequest } from "../types/express.js";
 import { Response, NextFunction } from "express";
 import { createExpense, getExpenses, deleteExpense } from "../services/expense.service.js";
 import { AppError } from "../utils/AppError.js";
+import { expenseQuerySchema } from "../validators/expense.query.validator.js";
 
 // Create expense controller
 export async function create(req: AuthRequest, res: Response, next: NextFunction) {
@@ -28,26 +29,28 @@ export async function get(req: AuthRequest, res: Response, next: NextFunction) {
             throw new AppError("Unauthorized", 401)
         }
 
+        const parsed = expenseQuerySchema.parse(req.query)
+
         const {
-            page = "1", 
-            limit = "10", 
+            page, 
+            limit, 
             category,
             minAmount,
             maxAmount,
             startDate,
             endDate
-        } = req.query;
+        } = parsed;
 
         const results = await getExpenses(
             req.user.userId,
-            Number(page),
-            Number(limit),
+            page,
+            limit,
             {
-                category: category as string,
-                minAmount: minAmount ? Number(minAmount) : undefined,
-                maxAmount: maxAmount ? Number(maxAmount) : undefined,
-                startDate: startDate as string,
-                endDate: endDate as string
+                category,
+                minAmount,
+                maxAmount,
+                startDate,
+                endDate
             }
         )
 
