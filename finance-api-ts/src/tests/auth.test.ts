@@ -56,11 +56,31 @@ describe("Auth API", () => {
             expect(res.body).toHaveProperty("accessToken");
         });
 
-        it("should fail if user logs in with wrong password", async () => {
-            const res = await request(app).post("/auth/login").send({
-                email: "seth@test.com",
-                password: "wrongpassword"
-            });
+        const testUser = {
+            email: 'login-test@example.com',
+            password: 'correct-password'
+        };
+
+        it('should fail if user logs in with wrong password', async () => {
+            // 1. Create the user
+            const signupRes = await request(app)
+                .post('/auth/signup')
+                .send({
+                    name: "Seth",
+                    email: 'unique-login-test@example.com',
+                    password: 'correct-password'
+                });
+            
+            // DEBUG: If this fails, the login will 404
+            expect(signupRes.statusCode).toBe(201); 
+
+            // 2. Attempt login
+            const res = await request(app)
+                .post('/auth/login')
+                .send({
+                    email: 'unique-login-test@example.com',
+                    password: 'wrong-password'
+                });
 
             expect(res.statusCode).toBe(401);
         });
