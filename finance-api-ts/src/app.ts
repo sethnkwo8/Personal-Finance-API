@@ -7,6 +7,7 @@ import { errorHandler } from "./middleware/error.middleware.js";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import morgan from "morgan";
+import { env } from "./config/env.js";
 
 const app = express()
 
@@ -25,7 +26,7 @@ app.use(helmet())
 app.use(limiter)
 
 // Logging with morgan
-if (process.env.NODE_ENV === "development") {
+if (env.nodeEnv === "development") {
     app.use(morgan("dev"));
 }
 

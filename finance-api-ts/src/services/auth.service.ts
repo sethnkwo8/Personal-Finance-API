@@ -3,6 +3,7 @@ import { User } from "../models/user.model.js";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { AppError } from "../utils/AppError.js";
+import { env } from "../config/env.js";
 
 // User signup service
 export async function signUpUser(
@@ -54,13 +55,13 @@ export async function loginUser(
 
     const accessToken = jwt.sign(
         {userId: user._id},
-        process.env.JWT_SECRET!,
+        env.jwtSecret!,
         {expiresIn: "15m"}
     )
 
     const refreshToken = jwt.sign(
         {userId: user._id},
-        process.env.JWT_REFRESH_SECRET!,
+        env.jwtRefreshSecret!,
         {expiresIn: "7d"}
     )
 
@@ -77,13 +78,13 @@ export function refreshAccessTokenService(refreshToken: string) {
     }
 
     try {
-        const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!) as {userId: string}
+        const decoded = jwt.verify(refreshToken, env.jwtRefreshSecret!) as {userId: string}
 
         const {userId} = decoded
 
         const accessToken = jwt.sign(
             {userId},
-            process.env.JWT_SECRET!,
+            env.jwtSecret!,
             {expiresIn: "15m"}
         )
 
