@@ -6,6 +6,7 @@ import expenseRoutes from "./routes/expense.routes.js"
 import { errorHandler } from "./middleware/error.middleware.js";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
+import morgan from "morgan";
 
 const app = express()
 
@@ -22,6 +23,11 @@ app.use(helmet())
 
 // Rate limit
 app.use(limiter)
+
+// Logging with morgan
+if (process.env.NODE_ENV === "development") {
+    app.use(morgan("dev"));
+}
 
 // Cors middleware
 app.use(cors());
