@@ -1,0 +1,11 @@
+services:
+  backend:
+    build: 
+      context: ./finance-api-ts
+      dockerfile: Dockerfile
+    container_name: personal-finance-backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./finance-api-ts:/app
+      - /app/node_modules
