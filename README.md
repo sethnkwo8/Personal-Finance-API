@@ -8,34 +8,30 @@ This project demonstrates modern backend engineering practices including authent
 
 ## 🚀 Features
 
-- 🔐 JWT Authentication (Access + Refresh Tokens)
-- 🔒 Protected Routes with Middleware
-- 💸 Expense Management (Create, Read, Delete)
-- 🧠 User-specific data isolation
-- 🔎 Advanced Filtering
-  - Category
-  - Amount range
-  - Date range
-- 📄 Pagination support
-- ⚠️ Centralized error handling
-- ✅ Schema validation with Zod
-- 🚦 Rate limiting (API protection)
-- 🛡️ Security middleware (Helmet, CORS)
-- 📊 MongoDB indexing for performance
-- 🧪 API testing with Jest & Supertest
-- ⚙️ Environment-based configuration
+- 🔐 **JWT Authentication**: Secure Access + Refresh Token flow via HttpOnly cookies and authorization headers.
+- 🐳 **Dockerized Dev Environment**: Fully containerized runtime isolation with hot-reloading using Docker Compose.
+- 🚦 **API Infrastructure Protection**: Implemented rate-limiting and robust security headers via Helmet and CORS.
+- 💸 **Expense Orchestration Engine**: Full CRUD support featuring robust user-specific data isolation.
+- 🔎 **Advanced Query Filtering**: Dynamic multi-parameter filtering covering Categories, Amount thresholds, and ISO Date ranges.
+- 📄 **Optimized Pagination**: Efficient pagination design implemented using cursor/skip boundaries.
+- ✅ **Schema Validation**: Strict request payload validation matching compiled TypeScript boundaries via Zod.
+- 📊 **High-Performance Indexing**: Compound and single-field MongoDB indices tailored for high-throughput queries.
+- 🧪 **Comprehensive Test Suite**: End-to-end integration testing utilizing Jest and Supertest.
+- ⚠️ **Centralized Middleware Error Handling**: Unified operational error transformations and status mapping.
 
 ---
 
 ## 🛠 Tech Stack
 
-- Backend: Node.js, Express.js
-- Language: TypeScript
-- Database: MongoDB + Mongoose
-- Authentication: JSON Web Token
-- Validation: Zod
-- Security: bcrypt, Helmet
-- Testing: Jest, Supertest
+| Category | Tools |
+|-----------|--------|
+| **Core Runtime** | Node.js (v20-alpine), Express.js |
+| **Language** | TypeScript |
+| **Database** | MongoDB + Mongoose ODM (Cloud Atlas Integration) |
+| **Authentication** | JSON Web Tokens (JWT), bcrypt |
+| **Validation** | Zod |
+| **Security** | Helmet, Express Rate Limit, CORS |
+| **Testing** | Jest, Supertest |
 
 ---
 
@@ -78,19 +74,54 @@ NODE_ENV=development
 
 ---
 
-## ▶️ Running the Project
+## 🚀 Quickstart with Docker (Recommended)
 
-**Step 1 – Install dependencies**
-```code
+You can spin up this API along with its hot-reloading development server inside an isolated environment without needing to install Node.js locally.
+
+**Prerequisites:** Make sure you have [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running.
+
+**Step 1 - Clone and Navigate into the Repository**
+```bash
+git clone [https://github.com/sethnkwo8/Personal-Finance-API.git](https://github.com/sethnkwo8/Personal-Finance-API.git)
+```
+
+**Step 2 - Configure Environment Variables**
+Ensure a .env file exists in your project root containing your MongoDB Atlas cluster URI (see the Environment variables reference below).
+
+**Step 3 - Launch the Container Stack**
+```bash
+docker compose up -d
+```
+
+The server will boot up live at http://localhost:3000.
+
+**Step 4 - Stream Runtime Logs**
+```bash
+docker compose logs -f
+```
+
+## 🛠 Manual Local Installation (Alternative)
+
+If you prefer to run the components individually without Docker:
+
+**Step 1 – Clone & Env Setup**
+```bash
+git clone https://github.com/sethnkwo8/Personal-Finance-API
+```
+
+**Step 2 – Install Dependencies**
+```bash
 npm install
 ```
 
 ---
 
-**Step 2 – Start developent server**
-```code
-npm run dev
+**Step 3 – Start the Development Server**
+```bash
+npm run dev       
 ```
+
+---
 
 ## 🔐 Authentication
 
@@ -279,7 +310,6 @@ npm test
 - ✏️ Update expense endpoint
 - 📊 Expense analytics dashboard
 - 🏷️ Category management system
-- 📦 Docker containerization
 - ☁️ Cloud deployment (AWS)
 
 ---
